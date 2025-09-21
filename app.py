@@ -8,7 +8,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 with app.app_context():
-    db.create_all()  # Erstellt die Tabellen, falls sie noch nicht existieren
+    db.create_all()  # Creates the tables if they do not exist yet
 
 @app.route('/')
 def home():
