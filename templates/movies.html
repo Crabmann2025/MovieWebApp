@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Filme für Benutzer {{ user_id }}</h2>
+
+<form method="POST" action="{{ url_for('add_movie', user_id=user_id) }}">
+<input type="text" name="title" placeholder="Filmtitel eingeben" required>
+<button type="submit">Film hinzufügen</button>
+</form>
+
+<ul>
+{% for movie in movies %}
+<li>
+<strong>{{ movie.name }}</strong> ({{ movie.year }}) - {{ movie.director }}
+{% if movie.poster_url %}<br><img src="{{ movie.poster_url }}" width="100">{% endif %}
+<form method="POST" action="{{ url_for('delete_movie', user_id=user_id, movie_id=movie.id) }}">
+<button type="submit">Löschen</button>
+</form>
+</li>
+{% endfor %}
+</ul>
+{% endblock %}
