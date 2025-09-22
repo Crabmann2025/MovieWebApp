@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <h2 class="section-title">{{ movie.name }} ({{ movie.year }})</h2>
+
+  <div class="movie-detail">
+    <!-- Poster links -->
+    <div class="poster-large">
+      <img src="{{ movie.poster_url }}" alt="{{ movie.name }}">
+    </div>
+
+    <!-- Infos rechts -->
+    <div class="movie-meta">
+      <h3>{{ movie.name }}</h3>
+      <p><strong>Regisseur:</strong> {{ movie.director }}</p>
+
+      <!-- Handlung (falls du später erweitern willst mit OMDb Plot) -->
+      {% if movie.plot %}
+        <p class="plot">{{ movie.plot }}</p>
+      {% else %}
+        <p class="plot"><em>Keine Handlung gespeichert.</em></p>
+      {% endif %}
+
+      <!-- Buttons -->
+      <div class="detail-buttons">
+        <!-- Update Movie -->
+        <form method="POST" action="{{ url_for('update_movie', user_id=user_id, movie_id=movie.id) }}">
+          <input type="text" name="new_title" placeholder="Neuer Titel" required>
+          <button type="submit" class="update-btn">Aktualisieren</button>
+        </form>
+
+        <!-- Delete Movie -->
+        <form method="POST" action="{{ url_for('delete_movie', user_id=user_id, movie_id=movie.id) }}">
+          <button type="submit" class="delete-btn">Löschen</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

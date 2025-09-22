@@ -4,36 +4,28 @@
 <div class="container last">
   <h2 class="section-title">Filme von {{ user_name }}</h2>
 
+  <!-- Film hinzufügen -->
   <form method="POST" action="{{ url_for('add_movie', user_id=user_id) }}" class="form-dark">
     <input type="text" name="title" placeholder="Filmtitel eingeben" required>
     <button type="submit">Film hinzufügen</button>
   </form>
 
+  <!-- Film Grid -->
   <div class="movie-grid">
     {% for movie in movies %}
       <div class="movie-card">
         {% if movie.poster_url %}
+          <!-- Poster Wrapper mit Link -->
           <div class="poster-wrapper">
-            <img src="{{ movie.poster_url }}" alt="{{ movie.name }}">
-
-            <!-- Overlay mit Update- und Delete-Buttons -->
-            <div class="movie-overlay">
-              <div class="movie-info">
-                <strong>{{ movie.name }}</strong><br>
-                <small>{{ movie.year }} – {{ movie.director }}</small>
+            <a href="{{ url_for('movie_detail', user_id=user_id, movie_id=movie.id) }}">
+              <img src="{{ movie.poster_url }}" alt="{{ movie.name }}">
+              <div class="movie-overlay">
+                <div class="movie-info">
+                  <strong>{{ movie.name }}</strong><br>
+                  <small>{{ movie.year }} – {{ movie.director }}</small>
+                </div>
               </div>
-
-              <!-- Update Movie Form -->
-              <form method="POST" action="{{ url_for('update_movie', user_id=user_id, movie_id=movie.id) }}">
-                <input type="text" name="new_title" placeholder="Neuer Titel" required>
-                <button type="submit" class="update-btn">Aktualisieren</button>
-              </form>
-
-              <!-- Delete Movie Form -->
-              <form method="POST" action="{{ url_for('delete_movie', user_id=user_id, movie_id=movie.id) }}">
-                <button type="submit" class="delete-btn">Löschen</button>
-              </form>
-            </div>
+            </a>
           </div>
         {% else %}
           <div class="poster-placeholder">{{ movie.name }}</div>

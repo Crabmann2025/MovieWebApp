@@ -343,3 +343,44 @@ button:hover {
 .update-btn:hover {
   background: #0056b3 !important; /* Dunkleres Blau */
 }
+
+/* ==============================
+   Movie Detail Page
+============================== */
+.movie-detail-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.movie-detail-grid {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.poster-detail img {
+  max-width: 400px;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.movie-info-detail {
+  flex: 1;
+}
+
+.movie-detail-buttons form {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .movie-detail-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+  .poster-detail img {
+    max-width: 100%;
+  }
+}

@@ -69,6 +69,28 @@ def list_movies(user_id):
         user_name=user.name
     )
 
+@app.route('/users/<int:user_id>/movies/<int:movie_id>', methods=['GET'])
+def movie_detail(user_id, movie_id):
+    """
+    Show details of a single movie (poster, title, plot, and actions).
+    """
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found!", "error")
+        return redirect(url_for('index'))
+
+    movie = Movie.query.get(movie_id)
+    if not movie:
+        flash("Movie not found!", "error")
+        return redirect(url_for('list_movies', user_id=user_id))
+
+    return render_template(
+        "movie_detail.html",
+        movie=movie,
+        user_id=user_id,
+        user_name=user.name
+    )
+
 
 @app.route('/users/<int:user_id>/movies', methods=['POST'])
 def add_movie(user_id):
@@ -144,23 +166,23 @@ def delete_movie(user_id, movie_id):
 
 # Error handling
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(error):
     """
     Handle 404 Not Found errors.
     """
     return render_template('404.html'), 404
 
 
-@app.errorhandler(505)
-def internal_error():
+@app.errorhandler(500)
+def internal_error(error):
     """
-    Handle 505 Internal Server errors.
+    Handle 500 Internal Server errors.
     """
-    return render_template('505.html'), 505
+    return render_template('505.html'), 500
 
 
 if __name__ == "__main__":
     """
     Runs the Flask development server in debug mode.
     """
-    app.run(debug=True)
+    #app.run(debug=True)
