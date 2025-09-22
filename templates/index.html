@@ -5,7 +5,7 @@
   {% if top_movie %}
     <img src="{{ top_movie.poster_url }}" alt="{{ top_movie.name }}">
     <div class="title_wrapper">
-      <span class="has-text-white">Meistgesehen</span>
+      <span class="has-text-white">Zufälliger Film</span>
       <h1 class="title is-1 has-text-white">{{ top_movie.name }} ({{ top_movie.year }})</h1>
       <form action="{{ url_for('list_movies', user_id=top_movie.user_id) }}">
         <button class="button is-medium">Jetzt ansehen</button>

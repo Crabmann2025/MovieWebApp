@@ -10,9 +10,9 @@ load_dotenv()
 OMDB_API_KEY = os.getenv("OMDB_API_KEY")
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///moviweb.db'  # SQLite Database
-app.config['SECRET_KEY'] = 'supersecretkey'  # Für flash-Meldungen
-db.init_app(app)  # Connect Flask with database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///moviweb.db'
+app.config['SECRET_KEY'] = 'supersecretkey'
+db.init_app(app)
 
 data_manager = DataManager()
 
@@ -22,7 +22,6 @@ with app.app_context():
 
 
 # Routes
-
 @app.route('/')
 def index():
     """
@@ -51,6 +50,7 @@ def add_user():
     flash(f"User '{name}' has been created.", "success")
     return redirect(url_for('index'))
 
+
 @app.route('/users/<int:user_id>/movies', methods=['GET'])
 def list_movies(user_id):
     """
@@ -66,9 +66,8 @@ def list_movies(user_id):
         "movies.html",
         movies=movies,
         user_id=user_id,
-        user_name=user.name  # Name des Benutzers für das Template
+        user_name=user.name
     )
-
 
 
 @app.route('/users/<int:user_id>/movies', methods=['POST'])
@@ -86,7 +85,7 @@ def add_movie(user_id):
         flash("Please enter a movie title.", "error")
         return redirect(url_for('list_movies', user_id=user_id))
 
-    # OMDb API
+    # OMDb API request
     response = requests.get(
         "http://www.omdbapi.com/",
         params={"t": title, "apikey": OMDB_API_KEY}
@@ -144,26 +143,24 @@ def delete_movie(user_id, movie_id):
 
 
 # Error handling
-
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found():
     """
     Handle 404 Not Found errors.
     """
     return render_template('404.html'), 404
 
 
-@app.errorhandler(500)
-def internal_error(e):
+@app.errorhandler(505)
+def internal_error():
     """
-    Handle 500 Internal Server errors.
+    Handle 505 Internal Server errors.
     """
-    return render_template('500.html'), 500
+    return render_template('505.html'), 505
 
 
-# Run the app
 if __name__ == "__main__":
     """
     Runs the Flask development server in debug mode.
     """
-    (app.run(debug=True))
+    app.run(debug=True)
