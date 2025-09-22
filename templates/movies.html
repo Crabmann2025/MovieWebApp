@@ -1,21 +1,32 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h2>Filme für Benutzer {{ user_id }}</h2>
+<div class="container last">
+  <h2 class="section-title">Filme von {{ user_name }}</h2>
 
-<form method="POST" action="{{ url_for('add_movie', user_id=user_id) }}">
-<input type="text" name="title" placeholder="Filmtitel eingeben" required>
-<button type="submit">Film hinzufügen</button>
-</form>
 
-<ul>
-{% for movie in movies %}
-<li>
-<strong>{{ movie.name }}</strong> ({{ movie.year }}) - {{ movie.director }}
-{% if movie.poster_url %}<br><img src="{{ movie.poster_url }}" width="100">{% endif %}
-<form method="POST" action="{{ url_for('delete_movie', user_id=user_id, movie_id=movie.id) }}">
-<button type="submit">Löschen</button>
-</form>
-</li>
-{% endfor %}
-</ul>
+  <form method="POST" action="{{ url_for('add_movie', user_id=user_id) }}" class="form-dark">
+    <input type="text" name="title" placeholder="Filmtitel eingeben" required>
+    <button type="submit">Film hinzufügen</button>
+  </form>
+
+  <div class="movie-grid">
+    {% for movie in movies %}
+      <div class="movie-card">
+        {% if movie.poster_url %}
+          <img src="{{ movie.poster_url }}" alt="{{ movie.name }}">
+        {% else %}
+          <div class="poster-placeholder">{{ movie.name }}</div>
+        {% endif %}
+        <div class="movie-info">
+          <strong>{{ movie.name }}</strong><br>
+          <small>{{ movie.year }} – {{ movie.director }}</small>
+        </div>
+        <form method="POST" action="{{ url_for('delete_movie', user_id=user_id, movie_id=movie.id) }}">
+          <button type="submit" class="delete-btn">Löschen</button>
+        </form>
+      </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

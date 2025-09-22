@@ -1,15 +1,48 @@
 {% extends "base.html" %}
-{% block content %}
-<h1>Benutzer</h1>
-<ul>
-{% for user in users %}
-<li><a href="{{ url_for('list_movies', user_id=user.id) }}">{{ user.name }}</a></li>
-{% endfor %}
-</ul>
 
-<h3>Neuen Benutzer hinzufügen</h3>
-<form method="POST" action="{{ url_for('add_user') }}">
-<input type="text" name="name" placeholder="Name eingeben" required>
-<button type="submit">Hinzufügen</button>
-</form>
+{% block content %}
+<div class="featured_wrapper">
+  {% if top_movie %}
+    <img src="{{ top_movie.poster_url }}" alt="{{ top_movie.name }}">
+    <div class="title_wrapper">
+      <span class="has-text-white">Meistgesehen</span>
+      <h1 class="title is-1 has-text-white">{{ top_movie.name }} ({{ top_movie.year }})</h1>
+      <form action="{{ url_for('list_movies', user_id=top_movie.user_id) }}">
+        <button class="button is-medium">Jetzt ansehen</button>
+      </form>
+    </div>
+  {% else %}
+    <div class="title_wrapper">
+      <h1 class="title is-1 has-text-white">Willkommen bei MoviWeb</h1>
+    </div>
+  {% endif %}
+</div>
+
+<div class="container last">
+  <h2 class="section-title">Benutzer</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flashes">
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <div class="user-list">
+    {% for user in users %}
+      <a href="{{ url_for('list_movies', user_id=user.id) }}" class="user-card">
+        {{ user.name }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <h2>Neuen Benutzer hinzufügen</h2>
+  <form action="{{ url_for('add_user') }}" method="post" class="form-dark">
+    <input type="text" name="name" placeholder="Name eingeben">
+    <button type="submit">Hinzufügen</button>
+  </form>
+</div>
 {% endblock %}

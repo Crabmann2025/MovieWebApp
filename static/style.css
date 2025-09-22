@@ -1,0 +1,254 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;800&display=swap");
+
+/* ==============================
+   General
+============================== */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding-top: 70px;    /* Header-Höhe */
+  padding-bottom: 80px; /* Footer-Höhe */
+  font-family: "Montserrat", sans-serif;
+  background: #000;
+  color: #fff;
+}
+
+h1, h2, h3 {
+  color: #fff;
+  margin: 0;
+}
+
+a {
+  color: #f40612;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* ==============================
+   Navbar (fixiert)
+============================== */
+header.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  z-index: 1000;
+  background: #111;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+.logo {
+  font-size: 2.5rem;
+}
+.navbar a {
+  margin-left: 1rem;
+  color: #fff;
+}
+.navbar a:hover {
+  color: #f40612;
+}
+
+/* ==============================
+   Footer (fixiert)
+============================== */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  text-align: center;
+  padding: 2rem;
+  color: #777;
+  font-size: 0.9em;
+  background: #111;
+  border-top: 1px solid #222;
+  z-index: 1000;
+}
+
+/* ==============================
+   Featured Header (Hero-Bereich)
+============================== */
+.featured_wrapper {
+  position: relative;
+}
+.featured_wrapper img {
+  width: 100%;
+  height: calc(80vh - 70px); /* Header abziehen */
+  object-fit: cover;
+  object-position: top;
+}
+.title_wrapper {
+  position: absolute;
+  left: 2rem;
+  bottom: 2rem;
+}
+.title_wrapper h1 {
+  font-size: 3rem;
+  width: 70%;
+}
+.title_wrapper span {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ==============================
+   Buttons
+============================== */
+button {
+  background: #f40612 !important;
+  color: #fff !important;
+  font-size: 18px;
+  padding: 0.5rem 2rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+button:hover {
+  background: #d30a0e !important;
+}
+
+/* ==============================
+   Containers
+============================== */
+.container {
+  padding: 6rem;
+}
+.last {
+  margin-top: 3rem;
+}
+.section-title {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+/* ==============================
+   Flash messages
+============================== */
+.flashes {
+  list-style: none;
+  padding: 0;
+}
+.flashes li {
+  margin: 0.5rem 0;
+  padding: 1rem;
+  border-radius: 5px;
+}
+.flashes li.success { background: #2ecc71; color: #fff; }
+.flashes li.error { background: #e74c3c; color: #fff; }
+
+/* ==============================
+   Forms
+============================== */
+.form-dark {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.form-dark input[type="text"] {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 3px;
+  flex: 1;
+}
+.form-dark button {
+  border-radius: 3px;
+}
+
+/* ==============================
+   User List
+============================== */
+.user-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.user-card {
+  background: #111;
+  padding: 1rem;
+  border-radius: 5px;
+  flex: 1 1 200px;
+  text-align: center;
+  transition: background 0.2s;
+}
+.user-card:hover {
+  background: #222;
+}
+
+/* ==============================
+   Movie Grid
+============================== */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.movie-card {
+  background: #111;
+  padding: 0.5rem;
+  border-radius: 5px;
+  text-align: center;
+}
+.movie-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+.poster-placeholder {
+  width: 100%;
+  height: 250px;
+  background: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+}
+.delete-btn {
+  margin-top: 0.5rem;
+  background: #444 !important;
+}
+.delete-btn:hover {
+  background: #666 !important;
+}
+
+/* ==============================
+   Error Pages
+============================== */
+.error-page {
+  text-align: center;
+  padding: 5rem 2rem;
+}
+.error-page h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* ==============================
+   Responsive
+============================== */
+@media (max-width: 768px) {
+  .title_wrapper {
+    left: 1rem;
+    bottom: 1rem;
+  }
+  .title_wrapper h1 {
+    font-size: 2rem;
+    width: 100%;
+  }
+  .container {
+    padding: 1rem;
+  }
+}
+@media (max-width: 480px) {
+  .movie-card img {
+    height: 200px;
+  }
+}

@@ -51,7 +51,6 @@ def add_user():
     flash(f"User '{name}' has been created.", "success")
     return redirect(url_for('index'))
 
-
 @app.route('/users/<int:user_id>/movies', methods=['GET'])
 def list_movies(user_id):
     """
@@ -63,7 +62,13 @@ def list_movies(user_id):
         return redirect(url_for('index'))
 
     movies = data_manager.get_movies(user_id)
-    return render_template("movies.html", movies=movies, user_id=user_id, user_name=user.name)
+    return render_template(
+        "movies.html",
+        movies=movies,
+        user_id=user_id,
+        user_name=user.name  # Name des Benutzers für das Template
+    )
+
 
 
 @app.route('/users/<int:user_id>/movies', methods=['POST'])
@@ -161,4 +166,4 @@ if __name__ == "__main__":
     """
     Runs the Flask development server in debug mode.
     """
-    app.run(debug=True)
+    (app.run(debug=True))
