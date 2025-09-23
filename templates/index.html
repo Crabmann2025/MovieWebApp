@@ -19,7 +19,7 @@
 </div>
 
 <div class="container last">
-  <h2 class="section-title">Benutzer</h2>
+  <h2 class="section-title">Users</h2>
 
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -39,10 +39,10 @@
     {% endfor %}
   </div>
 
-  <h2>Neuen Benutzer hinzufügen</h2>
+  <h2>New User</h2>
   <form action="{{ url_for('add_user') }}" method="post" class="form-dark">
     <input type="text" name="name" placeholder="Name eingeben">
-    <button type="submit">Hinzufügen</button>
+    <button type="submit">Add</button>
   </form>
 </div>
 {% endblock %}

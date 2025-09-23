@@ -30,16 +30,16 @@
       <p><strong>Regisseur:</strong> {{ movie.director }}</p>
 
       <!-- Interaktives Bewertungssystem -->
-      <h4>Bewertung</h4>
+      <h4>Rates</h4>
       <form action="{{ url_for('rate_movie', user_id=user_id, movie_id=movie.id) }}" method="POST" id="rating-form">
         <div class="stars">
-          {% for i in range(5,0,-1) %}
-            {# Sterne von 5 bis 1 #}
+          {% for i in range(10,0,-1) %}
+            {# Sterne von 10 bis 1 #}
             <input type="radio" name="rating" id="star{{ i }}" value="{{ i }}" {% if movie.rating == i %}checked{% endif %}>
             <label for="star{{ i }}" title="{{ i }} Sterne">★</label>
           {% endfor %}
         </div>
-        <button type="submit" class="update-btn" style="margin-top:10px;">Bewerten</button>
+        <button type="submit" class="update-btn" style="margin-top:10px;">Evaluate</button>
       </form>
 
       {% if movie.rating %}
@@ -50,7 +50,7 @@
     <!-- Edit Button -->
     <div style="margin-top: 20px; padding-left: 40px;">
       <a href="{{ url_for('edit_movie', user_id=user_id, movie_id=movie.id) }}" class="update-btn">
-        Film bearbeiten
+        Edit film
       </a>
     </div>
 

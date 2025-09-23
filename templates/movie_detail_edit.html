@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container">
-  <h2 class="section-title">Bearbeite: {{ movie.name }} ({{ movie.year }})</h2>
+  <h2 class="section-title">edit: {{ movie.name }} ({{ movie.year }})</h2>
 
   <div class="movie-detail-grid">
     <!-- Poster -->
@@ -10,10 +10,8 @@
       <img src="{{ movie.poster_url }}" alt="{{ movie.name }}">
     </div>
 
-    <!-- Meta Infos & Edit Form -->
-    <div class="movie-info-detail">
-      <h3>{{ movie.name }}</h3>
-      <p><strong>Regisseur:</strong> {{ movie.director }}</p>
+
+
 
       <!-- Buttons & Form -->
       <div class="movie-detail-buttons">
@@ -24,12 +22,12 @@
           <input type="text" name="director" placeholder="Neuer Regisseur" value="{{ movie.director }}">
           <input type="text" name="actors" placeholder="Neue Schauspieler" value="{{ movie.actors }}">
           <textarea name="plot" placeholder="Neuer Plot">{{ movie.plot }}</textarea>
-          <button type="submit" class="update-btn">Aktualisieren</button>
+          <button type="submit" class="update-btn">Update</button>
         </form>
 
         <!-- Delete Movie Form -->
         <form method="POST" action="{{ url_for('delete_movie', user_id=user_id, movie_id=movie.id) }}">
-          <button type="submit" class="delete-btn">Löschen</button>
+          <button type="submit" class="delete-btn">Delete</button>
         </form>
 
       </div>
@@ -37,18 +35,32 @@
 
     <!-- Extra Info (optional) -->
     <div class="movie-extra-box">
+      <h4>Name</h4>
+      {% if movie.name %}
+        <p>{{ movie.name }}</p>
+      {% else %}
+        <p><em>No movie Name saved.</em></p>
+      {% endif %}
+
+      <h4>Director</h4>
+      {% if movie.director %}
+        <p>{{ movie.director }}</p>
+      {% else %}
+        <p><em>No director saved.</em></p>
+      {% endif %}
+
       <h4>Actors</h4>
       {% if movie.actors %}
         <p>{{ movie.actors }}</p>
       {% else %}
-        <p><em>Keine Schauspieler gespeichert.</em></p>
+        <p><em>No actors saved.</em></p>
       {% endif %}
 
       <h4>Plot</h4>
       {% if movie.plot %}
         <p>{{ movie.plot }}</p>
       {% else %}
-        <p><em>Keine Handlung gespeichert.</em></p>
+        <p><em>No action saved.</em></p>
       {% endif %}
     </div>
   </div>

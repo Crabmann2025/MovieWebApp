@@ -2,12 +2,12 @@
 
 {% block content %}
 <div class="container last">
-  <h2 class="section-title">Filme von {{ user_name }}</h2>
+  <h2 class="section-title">{{ user_name }}'s Movies</h2>
 
   <!-- Film hinzufügen -->
   <form method="POST" action="{{ url_for('add_movie', user_id=user_id) }}" class="form-dark">
-    <input type="text" name="title" placeholder="Filmtitel eingeben" required>
-    <button type="submit">Film hinzufügen</button>
+    <input type="text" name="title" placeholder="Enter film title" required>
+    <button type="submit">Add</button>
   </form>
 
   <!-- Film Grid -->
