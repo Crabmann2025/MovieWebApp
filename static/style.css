@@ -384,3 +384,75 @@ button:hover {
     max-width: 100%;
   }
 }
+
+/* ==============================
+   Movie Extra Box (Actors + Plot)
+============================== */
+.card_right__button {
+  display: flex;
+  gap: 30px;
+  padding: 0 0 0 40px;
+  margin: 30px 0 0 0;
+}
+
+.card_right__button form {
+  flex: 1;
+}
+
+.card_right__button button {
+  width: 100%;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  border-radius: 5px;
+  border: 2px solid;
+  padding: 10px;
+  background: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Edit-Button */
+.card_right__button .edit-btn {
+  border-color: #1e90ff;
+  color: #1e90ff;
+}
+.card_right__button .edit-btn:hover {
+  background-color: #1e90ff;
+  color: #fff;
+}
+
+/* Delete-Button */
+.card_right__button .delete-btn {
+  border-color: #ff4d4d;
+  color: #ff4d4d;
+}
+.card_right__button .delete-btn:hover {
+  background-color: #ff4d4d;
+  color: #fff;
+}
+
+<!-- CSS für interaktive Sterne -->
+<style>
+.stars {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 5px;
+}
+.stars input {
+  display: none;
+}
+.stars label {
+  font-size: 2em;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.stars input:checked ~ label,
+.stars label:hover,
+.stars label:hover ~ label {
+  color: gold;
+}
+</style>
+{% endblock %}
