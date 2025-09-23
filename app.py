@@ -8,24 +8,28 @@ import os
 # Load environment variables
 load_dotenv()
 OMDB_API_KEY = os.getenv("OMDB_API_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "fallbacksecret")
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///moviweb.db'
-app.config['SECRET_KEY'] = 'supersecretkey'
+app.config['SECRET_KEY'] = SECRET_KEY
 db.init_app(app)
 
 data_manager = DataManager()
 
-# Create database tables if not exist
+# Create database tables if they do not exist
 with app.app_context():
     db.create_all()
 
 
+
 # Routes
+
+
 @app.route('/')
 def index():
     """
-    Home page: display all users and any flash messages.
+    Home page: Display all users and any flash messages.
     """
     users = data_manager.get_users()
     return render_template("index.html", users=users)
@@ -69,6 +73,7 @@ def list_movies(user_id):
         user_name=user.name
     )
 
+
 @app.route('/users/<int:user_id>/movies/<int:movie_id>', methods=['GET'])
 def movie_detail(user_id, movie_id):
     """
@@ -108,11 +113,17 @@ def add_movie(user_id):
         return redirect(url_for('list_movies', user_id=user_id))
 
     # OMDb API request
-    response = requests.get(
-        "http://www.omdbapi.com/",
-        params={"t": title, "apikey": OMDB_API_KEY}
-    )
-    data = response.json()
+    try:
+        response = requests.get(
+            "http://www.omdbapi.com/",
+            params={"t": title, "apikey": OMDB_API_KEY},
+            timeout=5
+        )
+        data = response.json()
+    except Exception:
+        flash("Error connecting to OMDb API.", "error")
+        return redirect(url_for('list_movies', user_id=user_id))
+
     if data.get("Response") != "True":
         flash(f"Movie '{title}' not found in OMDb.", "error")
         return redirect(url_for('list_movies', user_id=user_id))
@@ -130,10 +141,11 @@ def add_movie(user_id):
     flash(f"Movie '{title}' added to {user.name}'s favorites.", "success")
     return redirect(url_for('list_movies', user_id=user_id))
 
+
 @app.route('/users/<int:user_id>/movies/<int:movie_id>/rate', methods=['POST'])
 def rate_movie(user_id, movie_id):
     """
-    Speichert die Bewertung (1-5 Sterne) eines Films für einen bestimmten User.
+    Save the rating (1–10 stars) of a movie for a specific user.
     """
     user = User.query.get(user_id)
     if not user:
@@ -145,49 +157,16 @@ def rate_movie(user_id, movie_id):
         flash("Movie not found!", "error")
         return redirect(url_for('list_movies', user_id=user_id))
 
-    # Bewertung aus dem Formular holen
     rating = request.form.get('rating')
-    if rating and rating.isdigit() and 1 <= int(rating) <= 5:
-        movie.rating = int(rating)
-        db.session.commit()
-        flash(f"Bewertung für '{movie.name}' gespeichert: {rating} Sterne", "success")
+    if rating and rating.isdigit() and 1 <= int(rating) <= 10:
+        data_manager.rate_movie(movie_id, int(rating))
+        flash(f"Rating saved for '{movie.name}': {rating} stars.", "success")
     else:
-        flash("Ungültige Bewertung. Bitte wähle 1 bis 5 Sterne.", "error")
+        flash("Invalid rating. Please select between 1 and 10 stars.", "error")
 
     return redirect(url_for('movie_detail', user_id=user_id, movie_id=movie_id))
 
 
-@app.route('/users/<int:user_id>/movies/<int:movie_id>/update', methods=['POST'])
-def update_movie(user_id, movie_id):
-    """
-    Update multiple fields of a specific movie (title, director, actors, plot).
-    """
-    user = User.query.get(user_id)
-    if not user:
-        flash("User not found!", "error")
-        return redirect(url_for('index'))
-
-    movie = Movie.query.get(movie_id)
-    if not movie:
-        flash("Movie not found!", "error")
-        return redirect(url_for('list_movies', user_id=user_id))
-
-    # Felder aus dem Formular holen
-    updates = {
-        "name": request.form.get("name", "").strip(),
-        "director": request.form.get("director", "").strip(),
-        "actors": request.form.get("actors", "").strip(),
-        "plot": request.form.get("plot", "").strip()
-    }
-
-    # Nur nicht-leere Werte speichern
-    for field, value in updates.items():
-        if value:
-            setattr(movie, field, value)
-
-    db.session.commit()
-    flash("Movie updated successfully.", "success")
-    return redirect(url_for('movie_detail', user_id=user_id, movie_id=movie_id))
 
 @app.route('/users/<int:user_id>/movies/<int:movie_id>/edit', methods=['GET', 'POST'])
 def edit_movie(user_id, movie_id):
@@ -205,7 +184,6 @@ def edit_movie(user_id, movie_id):
         return redirect(url_for('list_movies', user_id=user_id))
 
     if request.method == "POST":
-        # Werte aus Formular holen
         movie.name = request.form.get('name', movie.name)
         movie.director = request.form.get('director', movie.director)
         movie.actors = request.form.get('actors', movie.actors)
@@ -217,6 +195,37 @@ def edit_movie(user_id, movie_id):
 
     return render_template("movie_detail_edit.html", movie=movie, user_id=user_id, user_name=user.name)
 
+@app.route('/users/<int:user_id>/movies/<int:movie_id>/update', methods=['POST'])
+def update_movie(user_id, movie_id):
+    """
+    Update multiple fields of a specific movie (title, director, actors, plot).
+    """
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found!", "error")
+        return redirect(url_for('index'))
+
+    movie = Movie.query.get(movie_id)
+    if not movie:
+        flash("Movie not found!", "error")
+        return redirect(url_for('list_movies', user_id=user_id))
+
+    # Get updated fields from form
+    updates = {
+        "name": request.form.get("name", "").strip(),
+        "director": request.form.get("director", "").strip(),
+        "actors": request.form.get("actors", "").strip(),
+        "plot": request.form.get("plot", "").strip()
+    }
+
+    # Only save non-empty values
+    for field, value in updates.items():
+        if value:
+            setattr(movie, field, value)
+
+    db.session.commit()
+    flash("Movie updated successfully.", "success")
+    return redirect(url_for('movie_detail', user_id=user_id, movie_id=movie_id))
 
 
 @app.route('/users/<int:user_id>/movies/<int:movie_id>/delete', methods=['POST'])
@@ -234,9 +243,12 @@ def delete_movie(user_id, movie_id):
     return redirect(url_for('list_movies', user_id=user_id))
 
 
+
 # Error handling
+
+
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(error):
     """
     Handle 404 Not Found errors.
     """
@@ -244,15 +256,15 @@ def page_not_found():
 
 
 @app.errorhandler(500)
-def internal_error():
+def internal_error(error):
     """
     Handle 500 Internal Server errors.
     """
-    return render_template('505.html'), 500
+    return render_template('500.html'), 500
 
 
 if __name__ == "__main__":
     """
-    Runs the Flask development server in debug mode.
+    Run the Flask development server in debug mode.
     """
     app.run(debug=True)
