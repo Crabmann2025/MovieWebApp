@@ -2,40 +2,58 @@
 
 {% block content %}
 <div class="container">
-  <h2 class="section-title">{{ movie.name }} ({{ movie.year }})</h2>
 
-  <div class="movie-detail">
-    <!-- Poster links -->
-    <div class="poster-large">
+  <div class="movie-detail-grid">
+    <!-- Poster -->
+    <div class="poster-detail">
       <img src="{{ movie.poster_url }}" alt="{{ movie.name }}">
     </div>
 
-    <!-- Infos rechts -->
-    <div class="movie-meta">
-      <h3>{{ movie.name }}</h3>
-      <p><strong>Regisseur:</strong> {{ movie.director }}</p>
+    <!-- Info-Kasten -->
+    <div class="movie-extra-box">
+      <h2 class="section-title">{{ movie.name }} ({{ movie.year }})</h2>
 
-      <!-- Handlung (falls du später erweitern willst mit OMDb Plot) -->
-      {% if movie.plot %}
-        <p class="plot">{{ movie.plot }}</p>
+      <h4>Actors</h4>
+      {% if movie.actors %}
+        <p>{{ movie.actors }}</p>
       {% else %}
-        <p class="plot"><em>Keine Handlung gespeichert.</em></p>
+        <p><em>Keine Schauspieler gespeichert.</em></p>
       {% endif %}
 
-      <!-- Buttons -->
-      <div class="detail-buttons">
-        <!-- Update Movie -->
-        <form method="POST" action="{{ url_for('update_movie', user_id=user_id, movie_id=movie.id) }}">
-          <input type="text" name="new_title" placeholder="Neuer Titel" required>
-          <button type="submit" class="update-btn">Aktualisieren</button>
-        </form>
+      <h4>Plot</h4>
+      {% if movie.plot %}
+        <p>{{ movie.plot }}</p>
+      {% else %}
+        <p><em>Keine Handlung gespeichert.</em></p>
+      {% endif %}
 
-        <!-- Delete Movie -->
-        <form method="POST" action="{{ url_for('delete_movie', user_id=user_id, movie_id=movie.id) }}">
-          <button type="submit" class="delete-btn">Löschen</button>
-        </form>
-      </div>
+      <p><strong>Regisseur:</strong> {{ movie.director }}</p>
+
+      <!-- Interaktives Bewertungssystem -->
+      <h4>Bewertung</h4>
+      <form action="{{ url_for('rate_movie', user_id=user_id, movie_id=movie.id) }}" method="POST" id="rating-form">
+        <div class="stars">
+          {% for i in range(5,0,-1) %}
+            {# Sterne von 5 bis 1 #}
+            <input type="radio" name="rating" id="star{{ i }}" value="{{ i }}" {% if movie.rating == i %}checked{% endif %}>
+            <label for="star{{ i }}" title="{{ i }} Sterne">★</label>
+          {% endfor %}
+        </div>
+        <button type="submit" class="update-btn" style="margin-top:10px;">Bewerten</button>
+      </form>
+
+      {% if movie.rating %}
+        <p>Aktuelle Bewertung: {{ movie.rating }} von 5 Sternen</p>
+      {% endif %}
     </div>
+
+    <!-- Edit Button -->
+    <div style="margin-top: 20px; padding-left: 40px;">
+      <a href="{{ url_for('edit_movie', user_id=user_id, movie_id=movie.id) }}" class="update-btn">
+        Film bearbeiten
+      </a>
+    </div>
+
   </div>
 </div>
 {% endblock %}
