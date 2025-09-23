@@ -38,3 +38,14 @@ class DataManager:
         if movie:
             db.session.delete(movie)
             db.session.commit()
+
+    def rate_movie(self, movie_id, rating):
+        """
+        Save a star rating (1-5) for a movie.
+        """
+        movie = Movie.query.get(movie_id)
+        if movie and isinstance(rating, int) and 1 <= rating <= 5:
+            movie.rating = rating
+            db.session.commit()
+            return True
+        return False
